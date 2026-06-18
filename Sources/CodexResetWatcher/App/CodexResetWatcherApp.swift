@@ -1,0 +1,42 @@
+import SwiftUI
+
+@main
+struct CodexResetWatcherApp: App {
+    @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
+    @StateObject private var store = ResetCreditsStore()
+
+    var body: some Scene {
+        WindowGroup("Codex Reset Watcher", id: "main") {
+            ContentView(store: store)
+                .frame(minWidth: 460, idealWidth: 540, minHeight: 380, idealHeight: 480)
+                .task {
+                    store.start()
+                }
+        }
+        .commands {
+            CommandGroup(replacing: .newItem) {}
+            CommandMenu("Codex Reset Watcher") {
+                Button("Refresh") {
+                    Task {
+                        await store.refresh()
+                    }
+                }
+                .keyboardShortcut("r", modifiers: [.command])
+            }
+        }
+
+        MenuBarExtra {
+            MenuBarStatusView(store: store)
+                .task {
+                    store.start()
+                }
+        } label: {
+            Label {
+                Text(store.menuBarTitle)
+            } icon: {
+                Image(systemName: store.statusSymbolName)
+            }
+        }
+        .menuBarExtraStyle(.window)
+    }
+}

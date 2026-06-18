@@ -1,0 +1,31 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    name: Build
+    runs-on: macos-15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Swift version
+        run: swift --version
+
+      - name: Build release
+        run: swift build -c release --jobs 1
+
+      - name: Package app bundle
+        run: ./script/build_and_run.sh --package
+
+      - name: Verify app bundle
+        run: |
+          test -d "dist/Codex Reset Watcher.app"
+          test -f "dist/Codex Reset Watcher.app/Contents/Resources/AppIcon.icns"
+          plutil -lint "dist/Codex Reset Watcher.app/Contents/Info.plist"
+          codesign --verify --deep --strict --verbose=2 "dist/Codex Reset Watcher.app"

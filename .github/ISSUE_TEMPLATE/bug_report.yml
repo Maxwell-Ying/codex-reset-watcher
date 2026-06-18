@@ -1,0 +1,33 @@
+name: Bug report
+description: Report something broken
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Do not paste `~/.codex/auth.json`, bearer tokens, or other secrets.
+  - type: input
+    id: macos
+    attributes:
+      label: macOS version
+      placeholder: "Example: macOS 15.5"
+    validations:
+      required: true
+  - type: input
+    id: codex
+    attributes:
+      label: Codex Desktop version
+      placeholder: "If known"
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: Describe the issue and what you expected.
+    validations:
+      required: true
+  - type: textarea
+    id: validation
+    attributes:
+      label: What have you tried?
+      placeholder: "Example: opened Codex Desktop, signed in again, relaunched the app"
