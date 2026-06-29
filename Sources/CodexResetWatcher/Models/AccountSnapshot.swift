@@ -196,7 +196,7 @@ struct CodexAccountSnapshot: Codable, Identifiable, Sendable, Equatable {
         resetExpiries.enumerated().map { index, expiry in
             ResetCreditDisplay(
                 id: "\(id.rawValue)-reset-\(index)",
-                title: "Cached reset credit",
+                title: "缓存的重置额度",
                 expiresAt: expiry,
                 isAvailable: expiry > Date()
             )

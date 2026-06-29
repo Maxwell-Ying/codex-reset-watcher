@@ -139,25 +139,25 @@ enum CodexAPIError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case let .missingAuth(path):
-            return "Could not find Codex login at \(path). Open Codex Desktop and sign in first."
+            return "未找到 Codex 登录信息：\(path)。请先打开 Codex Desktop 并登录。"
         case let .invalidAuth(path):
-            return "Could not read Codex login at \(path). Open Codex Desktop and sign in again."
+            return "无法读取 Codex 登录信息：\(path)。请重新打开 Codex Desktop 登录。"
         case .invalidResponse:
-            return "The Codex endpoint returned an invalid response."
+            return "Codex 端点返回了无效响应。"
         case .emptyResponse:
-            return "The Codex endpoint returned an empty response."
+            return "Codex 端点返回了空响应。"
         case let .unexpectedContentType(contentType):
-            return "The Codex endpoint returned \(contentType) instead of JSON. Open Codex Desktop and sign in again."
+            return "Codex 端点返回的是 \(contentType)，不是 JSON。请重新打开 Codex Desktop 登录。"
         case let .rateLimited(retryAfter):
             if let retryAfter, !retryAfter.isEmpty {
-                return "Codex rate-limited this check. Try again after \(retryAfter) seconds."
+                return "Codex 限制了本次检查。请在 \(retryAfter) 秒后重试。"
             }
-            return "Codex rate-limited this check. Try again later."
+            return "Codex 限制了本次检查。请稍后重试。"
         case let .httpStatus(status):
             if status == 401 || status == 403 {
-                return "Codex rejected the saved login. Open Codex Desktop and sign in again."
+                return "Codex 拒绝了已保存的登录信息。请重新打开 Codex Desktop 登录。"
             }
-            return "The Codex endpoint returned HTTP \(status)."
+            return "Codex 端点返回 HTTP \(status)。"
         }
     }
 }

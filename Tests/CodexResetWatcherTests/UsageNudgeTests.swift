@@ -12,7 +12,7 @@ final class UsageNudgeTests: XCTestCase {
         )
 
         XCTAssertEqual(nudge.tier, .spend)
-        XCTAssertEqual(nudge.title, "Go burn some tokens")
+        XCTAssertEqual(nudge.title, "可以推进任务")
     }
 
     @MainActor
@@ -25,7 +25,7 @@ final class UsageNudgeTests: XCTestCase {
         )
 
         XCTAssertEqual(nudge.tier, .hold)
-        XCTAssertEqual(nudge.title, "Hold that reset")
+        XCTAssertEqual(nudge.title, "先保留重置")
     }
 
     @MainActor
@@ -39,7 +39,7 @@ final class UsageNudgeTests: XCTestCase {
         )
 
         XCTAssertEqual(nudge.tier, .waitFiveHour)
-        XCTAssertEqual(nudge.title, "Let the 5h tank refill")
+        XCTAssertEqual(nudge.title, "先等 5h 窗口恢复")
     }
 
     @MainActor
@@ -53,8 +53,8 @@ final class UsageNudgeTests: XCTestCase {
         )
 
         XCTAssertEqual(nudge.tier, .deadline)
-        XCTAssertEqual(nudge.title, "Deadline override")
-        XCTAssertTrue(nudge.message.contains("Big deadline?"))
+        XCTAssertEqual(nudge.title, "紧急任务可重置")
+        XCTAssertTrue(nudge.message.contains("重要截止时间"))
     }
 
     @MainActor
@@ -68,8 +68,8 @@ final class UsageNudgeTests: XCTestCase {
         )
 
         XCTAssertEqual(nudge.tier, .deadline)
-        XCTAssertEqual(nudge.title, "Deadline call")
-        XCTAssertTrue(nudge.message.contains("If this is deadline work"))
+        XCTAssertEqual(nudge.title, "按截止时间判断")
+        XCTAssertTrue(nudge.message.contains("紧急工作"))
     }
 
     @MainActor
@@ -83,7 +83,7 @@ final class UsageNudgeTests: XCTestCase {
         )
 
         XCTAssertEqual(nudge.tier, .waitFiveHour)
-        XCTAssertEqual(nudge.title, "Let the 5h tank refill")
+        XCTAssertEqual(nudge.title, "先等 5h 窗口恢复")
     }
 
     @MainActor
@@ -97,7 +97,7 @@ final class UsageNudgeTests: XCTestCase {
         )
 
         XCTAssertEqual(nudge.tier, .noResets)
-        XCTAssertEqual(nudge.title, "No reset parachute")
+        XCTAssertEqual(nudge.title, "没有可用重置")
     }
 
     @MainActor
@@ -111,7 +111,7 @@ final class UsageNudgeTests: XCTestCase {
         )
 
         XCTAssertEqual(nudge.tier, .steady)
-        XCTAssertEqual(nudge.title, "Cruise mode")
+        XCTAssertEqual(nudge.title, "状态平稳")
     }
 
     @MainActor
@@ -124,7 +124,7 @@ final class UsageNudgeTests: XCTestCase {
         )
 
         XCTAssertEqual(nudge.tier, .spend)
-        XCTAssertEqual(nudge.title, "Go burn some tokens")
+        XCTAssertEqual(nudge.title, "可以推进任务")
     }
 
     @MainActor
@@ -136,12 +136,12 @@ final class UsageNudgeTests: XCTestCase {
             ],
             resetCount: 1,
             resetUrgencies: [
-                ResetExpiryUrgency(level: .urgent, badge: "Ends today", hint: "Use it soon or let it go")
+                ResetExpiryUrgency(level: .urgent, badge: "今天到期", hint: "尽快使用，否则会失效")
             ]
         )
 
         XCTAssertEqual(nudge.tier, .expiringReset)
-        XCTAssertEqual(nudge.title, "Use it or lose it")
+        XCTAssertEqual(nudge.title, "今天不用就会失效")
     }
 
     @MainActor
@@ -154,7 +154,7 @@ final class UsageNudgeTests: XCTestCase {
         )
 
         XCTAssertEqual(nudge.tier, .useIfBlocked)
-        XCTAssertEqual(nudge.title, "Green light, with brakes")
+        XCTAssertEqual(nudge.title, "受阻时再重置")
     }
 
     @MainActor
@@ -167,7 +167,7 @@ final class UsageNudgeTests: XCTestCase {
         )
 
         XCTAssertEqual(nudge.tier, .hold)
-        XCTAssertEqual(nudge.title, "Pocket the reset")
+        XCTAssertEqual(nudge.title, "把重置留到后面")
     }
 
     @MainActor
@@ -175,7 +175,7 @@ final class UsageNudgeTests: XCTestCase {
         let nudge = UsageNudge.make(windows: [], resetCount: 1)
 
         XCTAssertEqual(nudge.tier, .unavailable)
-        XCTAssertEqual(nudge.title, "Waiting on the meters")
+        XCTAssertEqual(nudge.title, "正在等待限额数据")
     }
 
     @MainActor
@@ -188,7 +188,7 @@ final class UsageNudgeTests: XCTestCase {
         )
 
         XCTAssertEqual(nudge.tier, .steady)
-        XCTAssertEqual(nudge.title, "Reset timing unclear")
+        XCTAssertEqual(nudge.title, "重置时间不明确")
     }
 
     @MainActor
@@ -227,7 +227,7 @@ final class UsageNudgeTests: XCTestCase {
         )
 
         XCTAssertEqual(nudge.tier, .noResets)
-        XCTAssertEqual(nudge.title, "No reset parachute")
+        XCTAssertEqual(nudge.title, "没有可用重置")
     }
 
     private func window(

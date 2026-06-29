@@ -23,9 +23,9 @@ struct CodexAccountIdentity: Sendable, Equatable {
             return name
         }
         if let accountId = clean(accountId) {
-            return "Codex account \(accountId.suffix(6))"
+            return "Codex 账号 \(accountId.suffix(6))"
         }
-        return "Codex account"
+        return "Codex 账号"
     }
 
     private func clean(_ value: String?) -> String? {

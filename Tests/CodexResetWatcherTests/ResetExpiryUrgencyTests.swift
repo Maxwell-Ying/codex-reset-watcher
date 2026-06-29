@@ -12,7 +12,7 @@ final class ResetExpiryUrgencyTests: XCTestCase {
         )
 
         XCTAssertEqual(urgency.level, .normal)
-        XCTAssertEqual(urgency.badge, "Available")
+        XCTAssertEqual(urgency.badge, "可用")
         XCTAssertNil(urgency.hint)
     }
 
@@ -24,7 +24,7 @@ final class ResetExpiryUrgencyTests: XCTestCase {
         )
 
         XCTAssertEqual(urgency.level, .approaching)
-        XCTAssertEqual(urgency.badge, "This week")
+        XCTAssertEqual(urgency.badge, "本周到期")
     }
 
     func testResetWithinThreeDaysGetsSoonWarning() {
@@ -35,7 +35,7 @@ final class ResetExpiryUrgencyTests: XCTestCase {
         )
 
         XCTAssertEqual(urgency.level, .soon)
-        XCTAssertEqual(urgency.badge, "Expires soon")
+        XCTAssertEqual(urgency.badge, "即将到期")
     }
 
     func testResetWithinOneDayGetsUrgentWarning() {
@@ -46,7 +46,7 @@ final class ResetExpiryUrgencyTests: XCTestCase {
         )
 
         XCTAssertEqual(urgency.level, .urgent)
-        XCTAssertEqual(urgency.badge, "Ends today")
+        XCTAssertEqual(urgency.badge, "今天到期")
     }
 
     func testExpiredResetIsRedFlagged() {
@@ -57,7 +57,7 @@ final class ResetExpiryUrgencyTests: XCTestCase {
         )
 
         XCTAssertEqual(urgency.level, .expired)
-        XCTAssertEqual(urgency.badge, "Expired")
+        XCTAssertEqual(urgency.badge, "已到期")
     }
 
     func testUnavailableResetDoesNotShowExpiryWarning() {
@@ -68,7 +68,7 @@ final class ResetExpiryUrgencyTests: XCTestCase {
         )
 
         XCTAssertEqual(urgency.level, .inactive)
-        XCTAssertEqual(urgency.badge, "Used")
+        XCTAssertEqual(urgency.badge, "已使用")
     }
 
     func testMissingExpiryStaysAvailableButUnknown() {
@@ -79,8 +79,8 @@ final class ResetExpiryUrgencyTests: XCTestCase {
         )
 
         XCTAssertEqual(urgency.level, .unknown)
-        XCTAssertEqual(urgency.badge, "Available")
-        XCTAssertEqual(urgency.hint, "Expiry unknown")
+        XCTAssertEqual(urgency.badge, "可用")
+        XCTAssertEqual(urgency.hint, "到期时间未知")
     }
 
     func testExactUrgencyBoundaries() {

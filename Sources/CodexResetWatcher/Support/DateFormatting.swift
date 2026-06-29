@@ -43,7 +43,8 @@ enum DateFormatting {
         }
 
         let formatter = DateFormatter()
-        formatter.setLocalizedDateFormatFromTemplate("MMM d, h:mm a")
+        formatter.locale = Locale(identifier: "zh_Hans_CN")
+        formatter.dateFormat = "M月d日 HH:mm"
         formatter.timeZone = .current
         return formatter.string(from: date)
     }
@@ -58,8 +59,8 @@ enum DateFormatting {
         }
 
         let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "en_US_POSIX")
-        formatter.dateFormat = "EEE, MMM d 'at' h:mm a"
+        formatter.locale = Locale(identifier: "zh_Hans_CN")
+        formatter.dateFormat = "M月d日 E HH:mm"
         formatter.timeZone = .current
         return formatter.string(from: date)
     }
@@ -74,8 +75,8 @@ enum DateFormatting {
         }
 
         let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "en_US_POSIX")
-        formatter.dateFormat = "EEE, MMM d"
+        formatter.locale = Locale(identifier: "zh_Hans_CN")
+        formatter.dateFormat = "M月d日 E"
         formatter.timeZone = .current
         return formatter.string(from: date)
     }
@@ -86,7 +87,7 @@ enum DateFormatting {
         }
 
         let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.locale = Locale(identifier: "zh_Hans_CN")
         formatter.dateFormat = "EEEE"
         formatter.timeZone = .current
         return formatter.string(from: date)
@@ -102,8 +103,8 @@ enum DateFormatting {
         }
 
         let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "en_US_POSIX")
-        formatter.dateFormat = "h:mm a"
+        formatter.locale = Locale(identifier: "zh_Hans_CN")
+        formatter.dateFormat = "HH:mm"
         formatter.timeZone = .current
         return formatter.string(from: date)
     }
@@ -114,21 +115,22 @@ enum DateFormatting {
         }
 
         let formatter = DateFormatter()
-        formatter.setLocalizedDateFormatFromTemplate("MMM d, yyyy h:mm a")
+        formatter.locale = Locale(identifier: "zh_Hans_CN")
+        formatter.dateFormat = "yyyy年M月d日 HH:mm"
         formatter.timeZone = .current
         return formatter.string(from: date)
     }
 
     static func checked(_ date: Date?) -> String {
         guard let date else {
-            return "Not checked yet"
+            return "尚未检查"
         }
 
         let formatter = DateFormatter()
         formatter.dateStyle = .none
         formatter.timeStyle = .short
         formatter.timeZone = .current
-        return "Last checked \(formatter.string(from: date))"
+        return "上次检查 \(formatter.string(from: date))"
     }
 
     static func resetTime(_ date: Date?) -> String {
@@ -154,20 +156,20 @@ enum DateFormatting {
         let minutes = (clamped % 3_600) / 60
 
         if days > 0 {
-            return hours > 0 ? "\(days)d \(hours)h" : "\(days)d"
+            return hours > 0 ? "\(days)天 \(hours)小时" : "\(days)天"
         }
         if hours > 0 {
-            return minutes > 0 ? "\(hours)h \(minutes)m" : "\(hours)h"
+            return minutes > 0 ? "\(hours)小时 \(minutes)分钟" : "\(hours)小时"
         }
-        return "\(max(1, minutes))m"
+        return "\(max(1, minutes))分钟"
     }
 
     static func windowTitle(seconds: Int) -> String {
         if seconds >= 86_400 {
             let days = max(1, seconds / 86_400)
-            return "\(days)d limit"
+            return "\(days)天限额"
         }
         let hours = max(1, seconds / 3_600)
-        return "\(hours)h limit"
+        return "\(hours)小时限额"
     }
 }

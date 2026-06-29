@@ -65,7 +65,7 @@ final class DecodeTests: XCTestCase {
 
         let value = DateFormatting.weekdayCompact(components.date)
 
-        XCTAssertTrue(value.hasPrefix("Fri, Jul 17 at "))
+        XCTAssertTrue(value.hasPrefix("7月17日 周五 "))
     }
 
     @MainActor
@@ -79,8 +79,8 @@ final class DecodeTests: XCTestCase {
         components.hour = 19
         components.minute = 38
 
-        XCTAssertEqual(DateFormatting.weekdayDate(components.date), "Fri, Jul 17")
-        XCTAssertEqual(DateFormatting.timeOnly(components.date), "7:38 PM")
+        XCTAssertEqual(DateFormatting.weekdayDate(components.date), "7月17日 周五")
+        XCTAssertEqual(DateFormatting.timeOnly(components.date), "19:38")
     }
 
     func testBase64URLDecodesUnpaddedPayload() {

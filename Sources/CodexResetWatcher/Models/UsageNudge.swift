@@ -27,9 +27,9 @@ struct UsageNudge: Sendable {
         if resetCount > 0, resetUrgencies.contains(where: { $0.level == .urgent }) {
             return UsageNudge(
                 tier: .expiringReset,
-                title: "Use it or lose it",
-                message: "A banked reset expires today. If there is useful work queued, spend that reset before it disappears.",
-                detail: "Reset ends today"
+                title: "今天不用就会失效",
+                message: "有一个已保存的重置额度今天到期。如果有重要工作排队，优先用掉它。",
+                detail: "今天到期"
             )
         }
 
@@ -38,9 +38,9 @@ struct UsageNudge: Sendable {
         else {
             return UsageNudge(
                 tier: .unavailable,
-                title: "Waiting on the meters",
-                message: "Reset stash loaded. Codex usage windows are still warming up.",
-                detail: "Try again soon"
+                title: "正在等待限额数据",
+                message: "重置额度已载入，Codex 使用窗口还在刷新中。",
+                detail: "稍后再试"
             )
         }
 
@@ -51,9 +51,9 @@ struct UsageNudge: Sendable {
         if resetCount == 0 {
             return UsageNudge(
                 tier: .noResets,
-                title: "No reset parachute",
-                message: "Watch the meters. There is no banked reset for a big sprint.",
-                detail: "\(weeklyRemaining)% weekly left"
+                title: "没有可用重置",
+                message: "请留意限额。当前没有可保存的重置额度可供大任务使用。",
+                detail: "每周剩余 \(weeklyRemaining)%"
             )
         }
 
@@ -64,9 +64,9 @@ struct UsageNudge: Sendable {
            fiveHourReset <= 90 * 60 {
             return UsageNudge(
                 tier: .waitFiveHour,
-                title: "Let the 5h tank refill",
-                message: "Weekly room is still decent. Let the short window catch up before spending a reset.",
-                detail: "5h resets in \(DateFormatting.duration(seconds: fiveHourReset))"
+                title: "先等 5h 窗口恢复",
+                message: "每周额度还算充足。先等短窗口恢复，再决定是否使用重置。",
+                detail: "5h 后 \(DateFormatting.duration(seconds: fiveHourReset)) 重置"
             )
         }
 
@@ -78,9 +78,9 @@ struct UsageNudge: Sendable {
            fiveHourReset <= 3 * 3_600 {
             return UsageNudge(
                 tier: .deadline,
-                title: "Deadline call",
-                message: "Weekly runway looks great. If this is deadline work, spend a reset. Otherwise let the 5h clock do its thing.",
-                detail: "5h resets in \(DateFormatting.duration(seconds: fiveHourReset))"
+                title: "按截止时间判断",
+                message: "每周额度很充足。如果是紧急工作，可以使用重置；否则等待 5h 窗口恢复。",
+                detail: "5h 后 \(DateFormatting.duration(seconds: fiveHourReset)) 重置"
             )
         }
 
@@ -91,18 +91,18 @@ struct UsageNudge: Sendable {
            fiveHourReset > 3 * 3_600 {
             return UsageNudge(
                 tier: .deadline,
-                title: "Deadline override",
-                message: "The short window is hours away. Big deadline? Use a reset. Otherwise coast until the 5h refill.",
-                detail: "5h resets in \(DateFormatting.duration(seconds: fiveHourReset))"
+                title: "紧急任务可重置",
+                message: "短窗口还要几个小时才恢复。有重要截止时间就使用重置，否则继续等待。",
+                detail: "5h 后 \(DateFormatting.duration(seconds: fiveHourReset)) 重置"
             )
         }
 
         guard let weeklyResetSeconds else {
             return UsageNudge(
                 tier: .steady,
-                title: "Reset timing unclear",
-                message: "Usage meters loaded, but Codex did not return a weekly reset timer. Spend a reset only if work is blocked.",
-                detail: "\(weeklyRemaining)% weekly left"
+                title: "重置时间不明确",
+                message: "使用限额已载入，但 Codex 没有返回每周重置计时。只有工作受阻时再使用重置。",
+                detail: "每周剩余 \(weeklyRemaining)%"
             )
         }
 
@@ -111,44 +111,44 @@ struct UsageNudge: Sendable {
         if resetCount >= 2, weeklyRemaining <= 15, weeklyDays >= 4 {
             return UsageNudge(
                 tier: .spend,
-                title: "Go burn some tokens",
-                message: "You have \(resetCount) resets banked, weekly room is thin, and refresh is days away. Push the run, then spend a reset if Codex blocks real work.",
-                detail: "\(weeklyRemaining)% weekly left"
+                title: "可以推进任务",
+                message: "你有 \(resetCount) 个可用重置，每周额度偏低且离刷新还有几天。先推进任务，如果 Codex 阻塞实际工作再使用重置。",
+                detail: "每周剩余 \(weeklyRemaining)%"
             )
         }
 
         if resetCount >= 1, weeklyRemaining <= 20, weeklyDays >= 2 {
             return UsageNudge(
                 tier: .useIfBlocked,
-                title: "Green light, with brakes",
-                message: "If real work hits the wall, spending a reset makes sense. Do not use it just to tidy up the meter.",
-                detail: "\(DateFormatting.duration(seconds: weeklyResetSeconds)) to weekly reset"
+                title: "受阻时再重置",
+                message: "如果实际工作卡住，使用重置是合理的。不要只为了让数字好看而消耗它。",
+                detail: "距每周重置 \(DateFormatting.duration(seconds: weeklyResetSeconds))"
             )
         }
 
         if weeklyRemaining >= 35, weeklyDays <= 3 {
             return UsageNudge(
                 tier: .hold,
-                title: "Hold that reset",
-                message: "Plenty of weekly runway and the next refresh is close. Let the reset stay banked.",
-                detail: "\(weeklyRemaining)% weekly left"
+                title: "先保留重置",
+                message: "每周额度充足，而且下次刷新不远。把重置额度先留着。",
+                detail: "每周剩余 \(weeklyRemaining)%"
             )
         }
 
         if weeklyRemaining >= 25, weeklyDays <= 2 {
             return UsageNudge(
                 tier: .hold,
-                title: "Pocket the reset",
-                message: "Capacity is not tight enough this close to weekly refresh. Keep the reset in your back pocket.",
-                detail: "\(DateFormatting.duration(seconds: weeklyResetSeconds)) away"
+                title: "把重置留到后面",
+                message: "距离每周刷新已经很近，当前容量还不算紧张。先保留这个重置额度。",
+                detail: "还有 \(DateFormatting.duration(seconds: weeklyResetSeconds))"
             )
         }
 
         return UsageNudge(
             tier: .steady,
-            title: "Cruise mode",
-            message: "Keep working. Re-check before a big run.",
-            detail: "\(weeklyRemaining)% weekly left"
+            title: "状态平稳",
+            message: "继续工作即可。开始大任务前再检查一次。",
+            detail: "每周剩余 \(weeklyRemaining)%"
         )
     }
 }

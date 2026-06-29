@@ -13,7 +13,7 @@ struct CreditRowView: View {
 
             VStack(alignment: .leading, spacing: 5) {
                 HStack(alignment: .firstTextBaseline, spacing: 7) {
-                    Text(ordinal.map { "Reset \($0) expires:" } ?? "Reset expires:")
+                    Text(ordinal.map { "重置 \($0) 到期：" } ?? "重置到期：")
                         .font(.subheadline.weight(.semibold))
                         .foregroundStyle(CodexPalette.secondaryText)
                     Text(DateFormatting.weekdayCompact(credit.expiresAt))
@@ -23,7 +23,7 @@ struct CreditRowView: View {
                 }
 
                 HStack(spacing: 6) {
-                    Text(credit.title ?? "Codex reset credit")
+                    Text(credit.title ?? "Codex 重置额度")
                         .font(.subheadline)
                         .foregroundStyle(CodexPalette.secondaryText)
                         .lineLimit(1)

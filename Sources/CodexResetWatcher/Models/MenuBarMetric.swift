@@ -11,7 +11,7 @@ enum MenuBarMetric: String, CaseIterable, Identifiable, Sendable {
     var pickerTitle: String {
         switch self {
         case .weekly:
-            return "Week"
+            return "每周"
         case .fiveHour:
             return "5h"
         }
@@ -20,7 +20,7 @@ enum MenuBarMetric: String, CaseIterable, Identifiable, Sendable {
     var fallbackCue: String {
         switch self {
         case .weekly:
-            return "week"
+            return "本周"
         case .fiveHour:
             return "5h"
         }

@@ -57,7 +57,7 @@ struct AccountDetailView: View {
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(CodexPalette.mutedText)
 
-                Text("Codex Reset Watcher")
+                Text("Codex 重置观察器")
                     .font(CodexStyle.Typography.appTitle)
 
                 Text(detail.statusDetail)
@@ -65,7 +65,7 @@ struct AccountDetailView: View {
                     .foregroundStyle(CodexPalette.secondaryText)
                     .lineLimit(1)
 
-                Text("\(detail.isActive ? "Active" : "Account"): \(detail.accountLabel)")
+                Text("\(detail.isActive ? "当前" : "账号")：\(detail.accountLabel)")
                     .font(.subheadline.weight(.medium))
                     .foregroundStyle(CodexPalette.secondaryText)
                     .lineLimit(1)
@@ -88,8 +88,7 @@ struct AccountDetailView: View {
     }
 
     private var resetCountLabel: String {
-        let plural = detail.availableCount == 1 ? "reset" : "resets"
-        return detail.isCached ? "\(plural) last seen" : "\(plural) banked"
+        return detail.isCached ? "上次记录的重置" : "可用重置"
     }
 
     private var snapshotBanner: some View {
@@ -102,7 +101,7 @@ struct AccountDetailView: View {
             VStack(alignment: .leading, spacing: 4) {
                 Text(detail.statusTitle)
                     .font(CodexStyle.Typography.cardTitle)
-                Text(detail.isStale ? "The displayed reset window has passed. Sign into this Codex account to refresh it." : "This is a local snapshot. Sign into this Codex account to refresh it.")
+                Text(detail.isStale ? "显示的重置窗口已经过去。请登录这个 Codex 账号以刷新。" : "这是本地缓存快照。请登录这个 Codex 账号以刷新。")
                     .font(.subheadline)
                     .foregroundStyle(CodexPalette.secondaryText)
                     .fixedSize(horizontal: false, vertical: true)
@@ -119,10 +118,10 @@ struct AccountDetailView: View {
     private var resetSection: some View {
         VStack(alignment: .leading, spacing: CodexStyle.Spacing.stack) {
             HStack {
-                Text("Reset expiry")
+                Text("重置到期")
                     .font(CodexStyle.Typography.sectionTitle)
                 Spacer()
-                Text("\(detail.availableCount) \(detail.isCached ? "last seen" : "available")")
+                Text("\(detail.availableCount) \(detail.isCached ? "上次记录" : "可用")")
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(CodexPalette.secondaryText)
             }
@@ -143,9 +142,9 @@ struct AccountDetailView: View {
         VStack(spacing: 10) {
             ProgressView()
                 .controlSize(.large)
-            Text("Checking the Codex fuel gauge...")
+            Text("正在检查 Codex 限额...")
                 .font(CodexStyle.Typography.sectionTitle)
-            Text("Fetching 5h, weekly, and reset-stash windows.")
+            Text("正在获取 5h、每周和重置额度窗口。")
                 .font(.body)
                 .foregroundStyle(CodexPalette.secondaryText)
         }
@@ -164,7 +163,7 @@ struct AccountDetailView: View {
                 Button {
                     onForget(snapshotID)
                 } label: {
-                    Label(detail.isStale ? "Forget stale" : "Forget snapshot", systemImage: "trash")
+                    Label(detail.isStale ? "忘记过期" : "忘记快照", systemImage: "trash")
                 }
             }
 
@@ -172,7 +171,7 @@ struct AccountDetailView: View {
                 Button {
                     onClearStale()
                 } label: {
-                    Label("Clear stale", systemImage: "clock.badge.exclamationmark")
+                    Label("清除过期", systemImage: "clock.badge.exclamationmark")
                 }
             }
 
@@ -180,14 +179,14 @@ struct AccountDetailView: View {
                 Button {
                     onClearCached()
                 } label: {
-                    Label("Clear cached", systemImage: "xmark.circle")
+                    Label("清除缓存", systemImage: "xmark.circle")
                 }
             }
 
             Button {
                 onRefresh()
             } label: {
-                Label(detail.isRefreshing ? "Refreshing" : "Refresh", systemImage: "arrow.clockwise")
+                Label(detail.isRefreshing ? "刷新中" : "刷新", systemImage: "arrow.clockwise")
             }
             .disabled(!detail.canRefresh || detail.isRefreshing)
         }
@@ -195,9 +194,9 @@ struct AccountDetailView: View {
 
     private var footerStatus: String {
         if detail.isCached {
-            return "Cached snapshot"
+            return "缓存快照"
         }
-        return "Updates every 5 min"
+        return "每 5 分钟更新"
     }
 
     private var emptyState: some View {
@@ -205,9 +204,9 @@ struct AccountDetailView: View {
             Image(systemName: "checkmark.seal")
                 .font(.system(size: 30))
                 .foregroundStyle(CodexPalette.secondaryText)
-            Text(detail.isCached ? "No reset expiries saved." : "No banked resets right now.")
+            Text(detail.isCached ? "没有保存重置到期时间。" : "当前没有可用重置。")
                 .font(CodexStyle.Typography.sectionTitle)
-            Text(detail.isCached ? "This snapshot did not include reset-credit expiry rows." : "Codex answered, but the reset stash is empty.")
+            Text(detail.isCached ? "这个快照不包含重置额度到期行。" : "Codex 已响应，但重置额度为空。")
                 .font(.body)
                 .foregroundStyle(CodexPalette.secondaryText)
         }
@@ -271,18 +270,18 @@ private struct UsageLimitCardView: View {
 
             Grid(alignment: .leading, horizontalSpacing: 12, verticalSpacing: 4) {
                 GridRow {
-                    Text("Used")
+                    Text("已使用")
                         .foregroundStyle(CodexPalette.secondaryText)
                     Text(percentText(window.usedPercent))
                         .monospacedDigit()
                 }
                 GridRow {
-                    Text("Resets in")
+                    Text("距离重置")
                         .foregroundStyle(CodexPalette.secondaryText)
                     Text(DateFormatting.duration(seconds: window.window.resetAfterSeconds))
                 }
                 GridRow {
-                    Text("Resets at")
+                    Text("重置时间")
                         .foregroundStyle(CodexPalette.secondaryText)
                     Text(DateFormatting.weekdayCompact(window.window.resetDate))
                 }
@@ -341,8 +340,8 @@ private struct LimitMeterView: View {
         }
         .frame(height: 6)
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel("Remaining")
-        .accessibilityValue(remainingPercent.map { "\($0)%" } ?? "Unknown")
+        .accessibilityLabel("剩余")
+        .accessibilityValue(remainingPercent.map { "\($0)%" } ?? "未知")
     }
 
     private var clampedValue: CGFloat {

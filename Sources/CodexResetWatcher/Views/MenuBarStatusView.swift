@@ -33,7 +33,7 @@ struct MenuBarStatusView: View {
                     .frame(width: CodexStyle.Size.menuIconColumn)
                     .foregroundStyle(CodexPalette.secondaryText)
 
-                Label("Menu bar", systemImage: "menubar.rectangle")
+                Label("菜单栏", systemImage: "menubar.rectangle")
                     .labelStyle(.titleOnly)
                     .font(CodexStyle.Typography.menuRowTitle)
                     .foregroundStyle(CodexPalette.primaryText)
@@ -41,7 +41,7 @@ struct MenuBarStatusView: View {
 
                 Spacer()
 
-                Picker("Menu bar display", selection: menuBarMetricSelection) {
+                Picker("菜单栏显示", selection: menuBarMetricSelection) {
                     ForEach(MenuBarMetric.allCases) { metric in
                         Text(metric.pickerTitle)
                             .tag(metric.rawValue)
@@ -75,7 +75,7 @@ struct MenuBarStatusView: View {
                 Divider()
 
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("Cached snapshots")
+                    Text("缓存快照")
                         .font(CodexStyle.Typography.menuRowMeta.weight(.semibold))
                         .foregroundStyle(CodexPalette.secondaryText)
                         .padding(.horizontal, 2)
@@ -98,17 +98,17 @@ struct MenuBarStatusView: View {
                         await store.refresh()
                     }
                 } label: {
-                    Label("Refresh", systemImage: "arrow.clockwise")
+                    Label("刷新", systemImage: "arrow.clockwise")
                 }
                 .disabled(store.isRefreshing)
 
                 Spacer()
 
-                Button("Open") {
+                Button("打开") {
                     showMainWindow()
                 }
 
-                Button("Quit") {
+                Button("退出") {
                     NSApp.terminate(nil)
                 }
             }
@@ -125,13 +125,13 @@ struct MenuBarStatusView: View {
                 .clipShape(RoundedRectangle(cornerRadius: CodexStyle.Radius.artwork, style: .continuous))
 
             VStack(alignment: .leading, spacing: 3) {
-                Text("Codex limits")
+                Text("Codex 限额")
                     .font(CodexStyle.Typography.menuTitle)
                     .foregroundStyle(CodexPalette.primaryText)
                 Text(DateFormatting.checked(store.lastChecked))
                     .font(CodexStyle.Typography.menuRowMeta)
                     .foregroundStyle(CodexPalette.secondaryText)
-                Text("Active: \(store.accountDisplayLabel)")
+                Text("当前：\(store.accountDisplayLabel)")
                     .font(.system(size: 13, weight: .semibold))
                     .foregroundStyle(CodexPalette.secondaryText)
                     .lineLimit(1)
@@ -184,7 +184,7 @@ struct MenuBarStatusView: View {
                 .frame(width: CodexStyle.Size.menuIconColumn)
                 .foregroundStyle(credit.isAvailable ? CodexPalette.availableGreen : CodexPalette.secondaryText)
 
-            Text("Reset \(index + 1) expires:")
+            Text("重置 \(index + 1) 到期：")
                 .font(CodexStyle.Typography.menuRowTitle)
                 .lineLimit(1)
 
@@ -219,7 +219,7 @@ struct MenuBarStatusView: View {
                         .lineLimit(1)
                         .truncationMode(.middle)
 
-                    Text(snapshot.isStale() ? "Stale snapshot" : "Cached snapshot")
+                    Text(snapshot.isStale() ? "过期快照" : "缓存快照")
                         .font(CodexStyle.Typography.menuRowMeta)
                         .foregroundStyle(snapshot.isStale() ? CodexPalette.warningOrange : CodexPalette.secondaryText)
                         .lineLimit(1)
@@ -248,7 +248,7 @@ struct MenuBarStatusView: View {
                     .frame(width: CodexStyle.Size.menuIconColumn)
                     .foregroundStyle(CodexPalette.warningOrange)
 
-                Text("Clear stale snapshots")
+                Text("清除过期快照")
                     .font(CodexStyle.Typography.menuRowTitle)
                     .foregroundStyle(CodexPalette.primaryText)
                     .lineLimit(1)
@@ -304,7 +304,7 @@ struct MenuBarStatusView: View {
                 .frame(width: CodexStyle.Size.menuIconColumn)
                 .foregroundStyle(CodexPalette.secondaryText)
 
-            Text("No available resets")
+            Text("没有可用重置")
                 .font(CodexStyle.Typography.menuRowTitle)
                 .foregroundStyle(CodexPalette.secondaryText)
 
@@ -331,16 +331,16 @@ struct MenuBarStatusView: View {
 
     private func remainingText(_ value: Int?) -> String {
         guard let value else {
-            return "Unknown"
+            return "未知"
         }
-        return "\(value)% left"
+        return "剩余 \(value)%"
     }
 
     private func resetText(_ window: UsageLimitDisplay) -> String {
         if let resetDate = window.window.resetDate {
-            return "Resets: \(DateFormatting.weekdayDate(resetDate)) at \(DateFormatting.timeOnly(resetDate))"
+            return "重置：\(DateFormatting.weekdayDate(resetDate)) \(DateFormatting.timeOnly(resetDate))"
         }
-        return "Resets in \(DateFormatting.duration(seconds: window.window.resetAfterSeconds))"
+        return "\(DateFormatting.duration(seconds: window.window.resetAfterSeconds)) 后重置"
     }
 
     private func showMainWindow() {

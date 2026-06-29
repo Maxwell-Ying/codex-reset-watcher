@@ -79,7 +79,7 @@ final class ResetCreditsStore: ObservableObject {
     }
 
     private var resetFallbackTitle: String {
-        "\(availableCount) reset\(availableCount == 1 ? "" : "s")"
+        "\(availableCount) 个重置"
     }
 
     private func menuBarResetCue(for metric: MenuBarMetric, window: UsageLimitWindow) -> String {
@@ -162,7 +162,7 @@ final class ResetCreditsStore: ObservableObject {
             return AccountSidebarRow(
                 selection: .cached(snapshot.id),
                 label: snapshot.effectiveLabel,
-                detail: stale ? "Stale snapshot" : "Cached \(DateFormatting.timeOnly(snapshot.lastChecked))",
+                detail: stale ? "过期快照" : "缓存于 \(DateFormatting.timeOnly(snapshot.lastChecked))",
                 systemImage: stale ? "clock.badge.exclamationmark" : "clock.arrow.circlepath",
                 isStale: stale
             )
@@ -173,12 +173,12 @@ final class ResetCreditsStore: ObservableObject {
 
     private var activeSidebarDetail: String {
         if isRefreshing {
-            return "Refreshing active account..."
+            return "正在刷新当前账号..."
         }
         if usage == nil, credits.isEmpty, !errorMessages.isEmpty {
-            return "No active Codex login"
+            return "没有当前 Codex 登录"
         }
-        return "Active now"
+        return "当前账号"
     }
 
     func detail(for selection: AccountSelection? = nil) -> AccountDetailState {
@@ -211,7 +211,7 @@ final class ResetCreditsStore: ObservableObject {
         do {
             snapshots = try snapshotPersistence.delete(id: id, from: snapshots)
         } catch {
-            usageErrorMessage = append(message: "Could not forget cached snapshot.", to: usageErrorMessage)
+            usageErrorMessage = append(message: "无法忘记缓存快照。", to: usageErrorMessage)
         }
         if selectedAccount == .cached(id) {
             selectedAccount = .active
@@ -224,7 +224,7 @@ final class ResetCreditsStore: ObservableObject {
             try snapshotPersistence.save(activeOnly)
             snapshots = activeOnly
         } catch {
-            usageErrorMessage = append(message: "Could not clear cached snapshots.", to: usageErrorMessage)
+            usageErrorMessage = append(message: "无法清除缓存快照。", to: usageErrorMessage)
         }
         selectedAccount = .active
     }
@@ -240,7 +240,7 @@ final class ResetCreditsStore: ObservableObject {
             try snapshotPersistence.save(next)
             snapshots = next
         } catch {
-            usageErrorMessage = append(message: "Could not clear stale snapshots.", to: usageErrorMessage)
+            usageErrorMessage = append(message: "无法清除过期快照。", to: usageErrorMessage)
         }
 
         if case let .cached(id) = selectedAccount,
@@ -308,7 +308,7 @@ final class ResetCreditsStore: ObservableObject {
                     snapshotID: nil
                 )
             }
-            usageErrorMessage = "Codex account changed during refresh. Refresh again to load the active account cleanly."
+            usageErrorMessage = "刷新过程中 Codex 账号发生变化。请再次刷新以重新载入当前账号。"
             creditsErrorMessage = nil
             lastChecked = refreshedAt
             return
@@ -328,7 +328,7 @@ final class ResetCreditsStore: ObservableObject {
         availableCount = 0
         activeSnapshotID = nil
         accountIdentity = CodexAccountIdentity(accountId: nil, email: nil, name: nil)
-        usageErrorMessage = refreshErrorMessage(area: "active account", error: error, hasPriorData: false)
+        usageErrorMessage = refreshErrorMessage(area: "当前账号", error: error, hasPriorData: false)
         creditsErrorMessage = nil
         lastChecked = Date()
         selectedAccount = selectedAccount == .active ? .active : selectedAccount
@@ -381,7 +381,7 @@ final class ResetCreditsStore: ObservableObject {
             creditsErrorMessage = nil
         case let .failure(error):
             creditsErrorMessage = refreshErrorMessage(
-                area: "reset stash",
+                area: "重置额度",
                 error: error,
                 hasPriorData: !credits.isEmpty
             )
@@ -399,7 +399,7 @@ final class ResetCreditsStore: ObservableObject {
             usageErrorMessage = nil
         case let .failure(error):
             usageErrorMessage = refreshErrorMessage(
-                area: "usage meters",
+                area: "使用限额",
                 error: error,
                 hasPriorData: usage != nil
             )
@@ -460,7 +460,7 @@ final class ResetCreditsStore: ObservableObject {
         do {
             snapshots = try snapshotPersistence.upsert(next, into: snapshots)
         } catch {
-            usageErrorMessage = append(message: "Could not save account snapshot.", to: usageErrorMessage)
+            usageErrorMessage = append(message: "无法保存账号快照。", to: usageErrorMessage)
         }
     }
 
@@ -542,7 +542,7 @@ final class ResetCreditsStore: ObservableObject {
             snapshotID: activeSnapshotID,
             accountLabel: accountDisplayLabel,
             planLabel: planLabel,
-            statusTitle: "Active account",
+            statusTitle: "当前账号",
             statusDetail: activeSidebarDetail,
             lastChecked: lastChecked,
             availableCount: availableCount,
@@ -568,9 +568,9 @@ final class ResetCreditsStore: ObservableObject {
         if stale {
             nudge = UsageNudge(
                 tier: .unavailable,
-                title: "Stale snapshot",
-                message: "These numbers are from the last time this account was active. Sign into this Codex account to refresh it.",
-                detail: "Cached"
+                title: "过期快照",
+                message: "这些数字来自该账号上次处于当前账号时的记录。请登录这个 Codex 账号以刷新。",
+                detail: "已缓存"
             )
         } else {
             nudge = UsageNudge.make(
@@ -585,8 +585,8 @@ final class ResetCreditsStore: ObservableObject {
             snapshotID: snapshot.id,
             accountLabel: snapshot.effectiveLabel,
             planLabel: snapshot.planLabel,
-            statusTitle: stale ? "Stale snapshot" : "Cached snapshot",
-            statusDetail: "Last refreshed \(DateFormatting.weekdayCompact(snapshot.lastChecked))",
+            statusTitle: stale ? "过期快照" : "缓存快照",
+            statusDetail: "上次刷新 \(DateFormatting.weekdayCompact(snapshot.lastChecked))",
             lastChecked: snapshot.lastChecked,
             availableCount: snapshot.resetCount,
             staleSnapshotCount: staleCachedSnapshotCount,
@@ -678,7 +678,7 @@ final class ResetCreditsStore: ObservableObject {
     }
 
     private func refreshErrorMessage(area: String, error: Error, hasPriorData: Bool) -> String {
-        let prefix = hasPriorData ? "Could not refresh \(area); showing the last known numbers." : "Could not load \(area)."
+        let prefix = hasPriorData ? "无法刷新\(area)，正在显示上次已知数据。" : "无法载入\(area)。"
         return "\(prefix) \(error.localizedDescription)"
     }
 
@@ -713,31 +713,31 @@ final class ResetCreditsStore: ObservableObject {
     private func errorMessage(for code: AccountSnapshotErrorCode) -> String {
         switch code {
         case .missingAuth:
-            return "Codex login was missing during the last refresh."
+            return "上次刷新时缺少 Codex 登录信息。"
         case .invalidAuth:
-            return "Codex login could not be read during the last refresh."
+            return "上次刷新时无法读取 Codex 登录信息。"
         case .invalidResponse:
-            return "Codex returned an invalid response during the last refresh."
+            return "上次刷新时 Codex 返回了无效响应。"
         case .emptyResponse:
-            return "Codex returned an empty response during the last refresh."
+            return "上次刷新时 Codex 返回了空响应。"
         case .unexpectedContentType:
-            return "Codex returned a non-JSON response during the last refresh."
+            return "上次刷新时 Codex 返回了非 JSON 响应。"
         case .rateLimited:
-            return "Codex rate-limited the last refresh."
+            return "上次刷新被 Codex 限流。"
         case .unauthorized, .forbidden:
-            return "Codex rejected the saved login during the last refresh."
+            return "上次刷新时 Codex 拒绝了已保存的登录信息。"
         case .httpStatus:
-            return "Codex returned an HTTP error during the last refresh."
+            return "上次刷新时 Codex 返回了 HTTP 错误。"
         case .decoding:
-            return "Codex data could not be decoded during the last refresh."
+            return "上次刷新时无法解码 Codex 数据。"
         case .accountChanged:
-            return "Codex account changed during refresh."
+            return "刷新过程中 Codex 账号发生变化。"
         case .usageFailed:
-            return "Usage meters did not refresh."
+            return "使用限额未刷新。"
         case .resetCreditsFailed:
-            return "Reset stash did not refresh."
+            return "重置额度未刷新。"
         case .persistenceFailed:
-            return "Account snapshot could not be saved."
+            return "无法保存账号快照。"
         }
     }
 
@@ -751,10 +751,10 @@ final class ResetCreditsStore: ObservableObject {
     private func display(for window: UsageLimitWindow, fallbackID: String, limitReached: Bool) -> UsageLimitDisplay {
         let seconds = window.limitWindowSeconds ?? 0
         if fallbackID == "primary" || (14_400...21_600).contains(seconds) {
-            return UsageLimitDisplay(id: "five-hour", kind: .fiveHour, title: "5h limit", window: window, limitReached: limitReached)
+            return UsageLimitDisplay(id: "five-hour", kind: .fiveHour, title: "5h 限额", window: window, limitReached: limitReached)
         }
         if fallbackID == "secondary" || (518_400...864_000).contains(seconds) {
-            return UsageLimitDisplay(id: "weekly", kind: .weekly, title: "Weekly limit", window: window, limitReached: limitReached)
+            return UsageLimitDisplay(id: "weekly", kind: .weekly, title: "每周限额", window: window, limitReached: limitReached)
         }
         return UsageLimitDisplay(id: fallbackID, kind: .generic, title: DateFormatting.windowTitle(seconds: seconds), window: window, limitReached: limitReached)
     }

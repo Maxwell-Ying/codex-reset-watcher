@@ -17,31 +17,31 @@ struct ResetExpiryUrgency: Equatable, Sendable {
 
     static func make(expiresAt: Date?, now: Date = Date(), isAvailable: Bool) -> ResetExpiryUrgency {
         guard isAvailable else {
-            return ResetExpiryUrgency(level: .inactive, badge: "Used", hint: nil)
+            return ResetExpiryUrgency(level: .inactive, badge: "已使用", hint: nil)
         }
 
         guard let expiresAt else {
-            return ResetExpiryUrgency(level: .unknown, badge: "Available", hint: "Expiry unknown")
+            return ResetExpiryUrgency(level: .unknown, badge: "可用", hint: "到期时间未知")
         }
 
         let seconds = expiresAt.timeIntervalSince(now)
 
         if seconds <= 0 {
-            return ResetExpiryUrgency(level: .expired, badge: "Expired", hint: "This reset is past its expiry time")
+            return ResetExpiryUrgency(level: .expired, badge: "已到期", hint: "这个重置额度已过期")
         }
 
         if seconds <= 86_400 {
-            return ResetExpiryUrgency(level: .urgent, badge: "Ends today", hint: "Use it soon or let it go")
+            return ResetExpiryUrgency(level: .urgent, badge: "今天到期", hint: "尽快使用，否则会失效")
         }
 
         if seconds <= 3 * 86_400 {
-            return ResetExpiryUrgency(level: .soon, badge: "Expires soon", hint: "Worth keeping top of mind")
+            return ResetExpiryUrgency(level: .soon, badge: "即将到期", hint: "建议留意这个额度")
         }
 
         if seconds <= 7 * 86_400 {
-            return ResetExpiryUrgency(level: .approaching, badge: "This week", hint: "Expiry is getting closer")
+            return ResetExpiryUrgency(level: .approaching, badge: "本周到期", hint: "到期时间越来越近")
         }
 
-        return ResetExpiryUrgency(level: .normal, badge: "Available", hint: nil)
+        return ResetExpiryUrgency(level: .normal, badge: "可用", hint: nil)
     }
 }

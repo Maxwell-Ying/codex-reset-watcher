@@ -186,7 +186,7 @@ final class AccountSnapshotStoreTests: XCTestCase {
         await store.refresh()
 
         XCTAssertEqual(store.snapshots.count, 0)
-        XCTAssertTrue(store.errorMessages.joined(separator: " ").contains("account changed"))
+        XCTAssertTrue(store.errorMessages.joined(separator: " ").contains("账号发生变化"))
     }
 
     func testAccountSwitchRaceClearsPriorActiveData() async throws {
@@ -214,7 +214,7 @@ final class AccountSnapshotStoreTests: XCTestCase {
         XCTAssertEqual(store.credits.count, 0)
         XCTAssertEqual(store.snapshots.count, 1)
         XCTAssertEqual(store.cachedSnapshots.count, 1)
-        XCTAssertTrue(store.errorMessages.joined(separator: " ").contains("account changed"))
+        XCTAssertTrue(store.errorMessages.joined(separator: " ").contains("账号发生变化"))
     }
 
     func testAccountSwitchWithFailedRefreshDoesNotShowPriorActiveData() async throws {
@@ -242,7 +242,7 @@ final class AccountSnapshotStoreTests: XCTestCase {
         XCTAssertEqual(store.credits.count, 0)
         XCTAssertEqual(store.snapshots.count, 1)
         XCTAssertEqual(store.cachedSnapshots.count, 1)
-        XCTAssertTrue(store.errorMessages.joined(separator: " ").contains("Could not load"))
+        XCTAssertTrue(store.errorMessages.joined(separator: " ").contains("无法载入"))
     }
 
     func testUsageAccountIDConflictUsesAuthContextSnapshotKey() async throws {

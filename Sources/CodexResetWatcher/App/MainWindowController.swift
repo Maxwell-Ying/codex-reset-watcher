@@ -4,7 +4,7 @@ import SwiftUI
 @MainActor
 final class MainWindowController: ObservableObject {
     private static let mainIdentifier = NSUserInterfaceItemIdentifier("codex-reset-watcher-main-window")
-    private static let mainTitle = "Codex Reset Watcher"
+    private static let mainTitle = "Codex 重置观察器"
 
     private weak var window: NSWindow?
 

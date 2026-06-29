@@ -17,7 +17,7 @@ struct AccountSidebarView: View {
         VStack(spacing: 0) {
             List(selection: selection) {
                 if let active = store.sidebarRows.first {
-                    Section("Active account") {
+                    Section("当前账号") {
                         sidebarRow(active)
                             .tag(active.selection)
                     }
@@ -25,7 +25,7 @@ struct AccountSidebarView: View {
 
                 let cached = store.sidebarRows.dropFirst()
                 if !cached.isEmpty {
-                    Section("Cached snapshots") {
+                    Section("缓存快照") {
                         ForEach(Array(cached)) { row in
                             sidebarRow(row)
                                 .tag(row.selection)
@@ -42,14 +42,14 @@ struct AccountSidebarView: View {
                         Button {
                             store.clearStaleSnapshots()
                         } label: {
-                            Label("Clear stale", systemImage: "clock.badge.exclamationmark")
+                            Label("清除过期", systemImage: "clock.badge.exclamationmark")
                         }
                     }
 
                     Button {
                         store.clearCachedSnapshots()
                     } label: {
-                        Label("Clear cached", systemImage: "trash")
+                        Label("清除缓存", systemImage: "trash")
                     }
                 }
                 .buttonStyle(.plain)

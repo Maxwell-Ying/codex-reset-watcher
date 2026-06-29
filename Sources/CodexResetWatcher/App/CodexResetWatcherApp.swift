@@ -12,7 +12,7 @@ struct CodexResetWatcherApp: App {
     }
 
     var body: some Scene {
-        WindowGroup("Codex Reset Watcher", id: "main") {
+        WindowGroup("Codex 重置观察器", id: "main") {
             ContentView(store: store)
                 .background {
                     MainWindowReader { window in
@@ -26,8 +26,8 @@ struct CodexResetWatcherApp: App {
         }
         .commands {
             CommandGroup(replacing: .newItem) {}
-            CommandMenu("Codex Reset Watcher") {
-                Button("Refresh") {
+            CommandMenu("Codex 重置观察器") {
+                Button("刷新") {
                     Task {
                         await store.refresh()
                     }
