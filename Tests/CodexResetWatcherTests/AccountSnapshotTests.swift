@@ -306,7 +306,7 @@ final class AccountSnapshotStoreTests: XCTestCase {
         XCTAssertEqual(store.cachedSnapshots.count, 1)
         XCTAssertEqual(store.usageWindows.count, 0)
         XCTAssertEqual(store.availableCount, 0)
-        XCTAssertTrue(store.errorMessages.joined(separator: " ").contains("active account"))
+        XCTAssertTrue(store.errorMessages.joined(separator: " ").contains("无法载入当前账号"))
     }
 
     func testPartialEndpointFailurePersistsSuccessfulUsageWithCoarseError() async throws {
