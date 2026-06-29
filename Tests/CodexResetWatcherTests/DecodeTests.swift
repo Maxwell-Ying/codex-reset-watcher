@@ -232,9 +232,9 @@ final class CodexAPIClientTests: XCTestCase {
 
         await store.refresh()
 
-        XCTAssertEqual(store.menuBarTitle, "63% | Sunday")
-        XCTAssertEqual(store.menuBarTitle(for: .weekly), "63% | Sunday")
-        XCTAssertEqual(store.menuBarTitle(for: .fiveHour), "29% | 9:50 PM")
+        XCTAssertEqual(store.menuBarTitle, "63% | 星期日")
+        XCTAssertEqual(store.menuBarTitle(for: .weekly), "63% | 星期日")
+        XCTAssertEqual(store.menuBarTitle(for: .fiveHour), "29% | 21:50")
         XCTAssertEqual(store.accountDisplayLabel, "builder@example.com")
     }
 
