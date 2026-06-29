@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.3.6 - 2026-06-29
+
+- Localizes the app interface, menu bar labels, reset-credit messaging, and
+  supporting status text to Chinese.
+- Updates the packaged app version so release assets are named
+  `Codex.Reset.Watcher.v0.3.6.zip` instead of carrying the previous `0.3.3`
+  bundle version.
+
 ## 0.3.3 - 2026-06-26
 
 - Adds an explicit `Clear stale` action in the desktop sidebar, desktop footer,
